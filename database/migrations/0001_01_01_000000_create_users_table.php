@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('provider')->nullable();
             $table->string('provider_id')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->string('google_id')->nullable();
             $table->timestamps();
         });
 

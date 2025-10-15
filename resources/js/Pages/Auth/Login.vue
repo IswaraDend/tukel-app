@@ -32,6 +32,7 @@ const loginWithGoogle = () => {
 </script>
 
 <template>
+
   <Head title="Login" />
 
   <GuestLayout>
@@ -42,28 +43,15 @@ const loginWithGoogle = () => {
     <form @submit.prevent="submit">
       <div>
         <InputLabel for="email" value="Email" />
-        <TextInput
-          id="email"
-          v-model="form.email"
-          type="email"
-          class="mt-1 block w-full"
-          required
-          autofocus
-          autocomplete="username"
-        />
+        <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required autofocus
+          autocomplete="username" />
         <InputError class="mt-2" :message="form.errors.email" />
       </div>
 
       <div class="mt-4">
         <InputLabel for="password" value="Password" />
-        <TextInput
-          id="password"
-          v-model="form.password"
-          type="password"
-          class="mt-1 block w-full"
-          required
-          autocomplete="current-password"
-        />
+        <TextInput id="password" v-model="form.password" type="password" class="mt-1 block w-full" required
+          autocomplete="current-password" />
         <InputError class="mt-2" :message="form.errors.password" />
       </div>
 
@@ -81,18 +69,21 @@ const loginWithGoogle = () => {
         <div class="border-t border-gray-300 w-1/4"></div>
       </div>
 
-      <button
-        type="button"
-        @click="loginWithGoogle"
-        class="mt-4 flex items-center justify-center gap-2 w-full py-2 px-4 border border-gray-300 rounded hover:bg-gray-100 transition"
-      >
-        <img
-          src="https://www.svgrepo.com/show/475656/google-color.svg"
-          width="20"
-          alt="Google Logo"
-        />
+      <button type="button" @click="loginWithGoogle"
+        class="mt-4 flex items-center justify-center gap-2 w-full py-2 px-4 border border-gray-300 rounded hover:bg-gray-100 transition">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" alt="Google Logo" />
         <span class="text-gray-700 font-medium">Login dengan Google</span>
       </button>
+
+      <div class="text-center mt-4">
+        <p class="text-sm text-gray-600">
+          Belum punya akun?
+          <a :href="route('register')" class="text-blue-600 hover:underline font-semibold">
+            Buat Akun
+          </a>
+        </p>
+      </div>
     </div>
+
   </GuestLayout>
 </template>

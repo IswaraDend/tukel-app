@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -46,28 +48,33 @@ Route::middleware('auth')->group(function () {
 | Google OAuth (Socialite)
 |--------------------------------------------------------------------------
 */
-Route::get('/auth/google/redirect', function () {
-    return Socialite::driver('google')->redirect();
-})->name('google.redirect');
+// Route::get('/auth/google/redirect', function () {
+//     return Socialite::driver('google')->redirect();
+// })->name('google.redirect');
 
-Route::get('/auth/google/callback', function () {
-    $googleUser = Socialite::driver('google')->user();
+// Route::get('/auth/google/callback', function () {
+//     $googleUser = Socialite::driver('google')->user();
 
-    $user = User::updateOrCreate(
-        ['email' => $googleUser->getEmail()],
-        [
-            'name' => $googleUser->getName(),
-            'provider' => 'google',
-            'provider_id' => $googleUser->getId(),
-            'password' => bcrypt(Str::random(16)), // acak agar tidak null
-            'is_active' => true,
-        ]
-    );
+//     $user = User::updateOrCreate(
+//         ['email' => $googleUser->getEmail()],
+//         [
+//             'name' => $googleUser->getName(),
+//             'provider' => 'google',
+//             'provider_id' => $googleUser->getId(),
+//             'password' => bcrypt(Str::random(16)), // acak agar tidak null
+//             'is_active' => true,
+//         ]
+//     );
 
-    Auth::login($user);
-    return redirect()->route('dashboard');
-})->name('google.callback');
+//     Auth::login($user);
+//     return redirect()->route('dashboard');
+// })->name('google.callback');
 
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->name('logout');
 /*
 |--------------------------------------------------------------------------
 | Auth scaffolding dari Breeze (jika digunakan)
