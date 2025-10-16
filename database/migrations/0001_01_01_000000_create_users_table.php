@@ -11,7 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. USERS
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
@@ -24,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 2. TEAMS
         Schema::create('teams', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
@@ -35,7 +33,6 @@ return new class extends Migration
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-        // 3. TEAM MEMBERS
         Schema::create('team_members', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('team_id');
@@ -46,7 +43,6 @@ return new class extends Migration
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });
 
-        // 4. ASSIGNMENTS
         Schema::create('assignments', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('team_id');
@@ -60,7 +56,6 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
         });
 
-        // 5. QUESTIONS
         Schema::create('questions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('assignment_id');
@@ -71,7 +66,6 @@ return new class extends Migration
             $table->foreign('assignment_id')->references('id')->on('assignments')->onDelete('cascade');
         });
 
-        // 6. DISTRIBUTIONS
         Schema::create('distributions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('assignment_id');
@@ -87,7 +81,6 @@ return new class extends Migration
             $table->foreign('member_id')->references('id')->on('team_members')->onDelete('cascade');
         });
 
-        // 7. EXPORT LOGS
         Schema::create('export_logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('assignment_id');

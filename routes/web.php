@@ -6,6 +6,9 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\DistributionController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Foundation\Application;
@@ -17,6 +20,7 @@ use Inertia\Inertia;
 | Redirect root ke login/dashboard
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', function () {
     return Auth::check()
         ? redirect()->route('dashboard')
@@ -48,30 +52,37 @@ Route::middleware('auth')->group(function () {
 | Google OAuth (Socialite)
 |--------------------------------------------------------------------------
 */
-// Route::get('/auth/google/redirect', function () {
-//     return Socialite::driver('google')->redirect();
-// })->name('google.redirect');
-
-// Route::get('/auth/google/callback', function () {
-//     $googleUser = Socialite::driver('google')->user();
-
-//     $user = User::updateOrCreate(
-//         ['email' => $googleUser->getEmail()],
-//         [
-//             'name' => $googleUser->getName(),
-//             'provider' => 'google',
-//             'provider_id' => $googleUser->getId(),
-//             'password' => bcrypt(Str::random(16)), // acak agar tidak null
-//             'is_active' => true,
-//         ]
-//     );
-
-//     Auth::login($user);
-//     return redirect()->route('dashboard');
-// })->name('google.callback');
-
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+
+/*
+|--------------------------------------------------------------------------
+| Assignment Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/assignments/create', [AssignmentController::class, 'create'])->name('assignments.create');
+    Route::post('/assignments', [AssignmentController::class, 'store'])->name('assignments.store');
+    Route::get('/assignments/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
+    Route::get('/assignments/{assignment}/distribution', [AssignmentController::class, 'distributionPage'])
+        ->name('assignments.distribution');
+    Route::post('/assignments/{assignment}/distribution', [AssignmentController::class, 'saveDistribution'])
+        ->name('assignments.distribution.save');
+
+    Route::prefix('api')->group(function () {
+        // ✅ Team endpoints
+        Route::get('/teams', [TeamController::class, 'index']);
+        Route::post('/teams', [TeamController::class, 'store']);
+
+        // ✅ Assignment endpoints
+        Route::get('/assignments', [AssignmentController::class, 'index']);
+        Route::post('/assignments', [AssignmentController::class, 'store']);
+        Route::post('/assignments/{assignment}/distribute', [AssignmentController::class, 'distribute']);
+    });
+
+    Route::put('/distributions/{distribution}', [DistributionController::class, 'update']);
+});
+
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
@@ -80,4 +91,4 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 | Auth scaffolding dari Breeze (jika digunakan)
 |--------------------------------------------------------------------------
 */
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'provider',
         'provider_id',
+        'google_id',
         'is_active',
     ];
 
@@ -53,18 +54,13 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
-    /**
-     * Relasi contoh (optional)
-     *  - User bisa punya banyak Team (sebagai owner)
-     *  - User bisa punya banyak Assignment yang dia buat
-     */
-    // public function teams()
-    // {
-    //     return $this->hasMany(Team::class, 'owner_id');
-    // }
+    public function teams()
+    {
+        return $this->hasMany(Team::class, 'owner_id');
+    }
 
-    // public function assignments()
-    // {
-    //     return $this->hasMany(Assignment::class, 'created_by');
-    // }
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class, 'created_by');
+    }
 }
