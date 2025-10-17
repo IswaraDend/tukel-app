@@ -9,11 +9,14 @@ class DistributionController extends Controller
 {
     public function update(Request $request, Distribution $distribution)
     {
-        $validated = $request->validate([
-            'is_confirmed' => 'required|boolean',
-        ]);
+        $value = $request->input('is_confirmed');
 
-        $distribution->update(['is_confirmed' => $validated['is_confirmed']]);
-        return response()->json(['message' => 'Updated']);
+        $distribution->is_confirmed = $value;
+        $distribution->save();
+
+        return response()->json([
+            'message' => 'Updated successfully',
+            'distribution' => $distribution->fresh(),
+        ]);
     }
 }

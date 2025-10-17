@@ -34,9 +34,24 @@ const createAssignment = () => {
     router.visit(route('assignments.create'));
 };
 
-// klik item untuk buka distribusi
+// Klik item untuk buka distribusi
 const goToDistribution = (assignmentId) => {
     router.visit(`/assignments/${assignmentId}`);
+};
+
+// 🗑 Delete assignment
+const deleteAssignment = async (id) => {
+    const confirmDelete = confirm('Yakin ingin menghapus assignment ini?');
+    if (!confirmDelete) return;
+
+    try {
+        await axios.delete(`/api/assignments/${id}`);
+        assignments.value = assignments.value.filter(a => a.id !== id);
+        alert('Assignment berhasil dihapus ✅');
+    } catch (err) {
+        console.error('Gagal menghapus assignment:', err);
+        alert('Gagal menghapus assignment ❌');
+    }
 };
 
 // =========================
@@ -127,7 +142,7 @@ onMounted(() => {
                             </div>
 
                             <button
-                                @click.stop="alert('Delete feature belum diaktifkan')"
+                                @click.stop="deleteAssignment(item.id)"
                                 class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition"
                             >
                                 🗑

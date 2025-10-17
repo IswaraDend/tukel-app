@@ -11,6 +11,10 @@ const Ziggy = {
       "uri": "dashboard", 
       "methods": ["GET", "HEAD"] 
     }, 
+    "about": {
+      "uri": "about",
+      "methods": ["GET", "HEAD"]
+    },
     "profile.edit": { 
       "uri": "profile", 
       "methods": ["GET", "HEAD"] 

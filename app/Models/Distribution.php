@@ -11,7 +11,16 @@ class Distribution extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'assignment_id', 'question_id', 'member_id', 'status', 'is_confirmed', 'completed_at'
+        'assignment_id',
+        'question_id',
+        'member_id',
+        'status',
+        'is_confirmed',
+        'completed_at'
+    ];
+
+    protected $casts = [
+        'is_confirmed' => 'boolean',
     ];
 
     public function assignment()

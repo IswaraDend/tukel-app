@@ -35,6 +35,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->middleware(['auth', 'verified'])->name('about');
 
 /*
 |--------------------------------------------------------------------------
@@ -78,14 +81,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/assignments', [AssignmentController::class, 'index']);
         Route::post('/assignments', [AssignmentController::class, 'store']);
         Route::post('/assignments/{assignment}/distribute', [AssignmentController::class, 'distribute']);
+        Route::delete('/assignments/{assignment}', [AssignmentController::class, 'destroy']);
+        Route::put('/distributions/{distribution}', [DistributionController::class, 'update']);
     });
-
-    Route::put('/distributions/{distribution}', [DistributionController::class, 'update']);
 });
 
-
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->name('logout');
 /*
 |--------------------------------------------------------------------------
 | Auth scaffolding dari Breeze (jika digunakan)

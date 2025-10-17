@@ -14,20 +14,24 @@ class AssignmentController extends Controller
 {
     public function index()
     {
-        $assignments = Assignment::with([
-            'team:id,name',
-            'team.members:id,team_id,member_name'
-        ])
-            ->where('created_by', auth()->id())
-            ->latest()
-            ->get()
-            ->map(function ($a) {
-                // Hitung total weight dan jumlah question
-                $a->questions_count = $a->questions()->count();
-                $a->score_max = $a->questions()->sum('weight') ?? 0;
-                $a->score_total = 0; // default 0 sampai ada distribusi / penilaian
-                return $a;
-            });
+        $assignments = Assignment::with(['team.members', 'questions', 'distributions'])->get();
+
+        $assignments->transform(function ($assignment) {
+            $scoreTotal = $assignment->distributions
+                ->where('is_confirmed', true)
+                ->sum(fn($d) => optional($d->question)->weight);
+
+            $scoreMax = $assignment->questions->sum('weight');
+
+            return [
+                'id' => $assignment->id,
+                'team' => $assignment->team,
+                'questions_count' => $assignment->questions->count(),
+                'score_total' => $scoreTotal,
+                'score_max' => $scoreMax,
+                'created_at' => $assignment->created_at,
+            ];
+        });
 
         return response()->json($assignments);
     }
@@ -158,5 +162,12 @@ class AssignmentController extends Controller
         }
 
         return redirect()->route('dashboard')->with('success', 'Distribution saved successfully');
+    }
+
+    public function destroy(Assignment $assignment)
+    {
+        $assignment->delete();
+
+        return response()->json(['message' => 'Assignment deleted successfully']);
     }
 }
