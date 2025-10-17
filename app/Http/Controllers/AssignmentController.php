@@ -14,7 +14,9 @@ class AssignmentController extends Controller
 {
     public function index()
     {
-        $assignments = Assignment::with(['team.members', 'questions', 'distributions'])->get();
+        $assignments = Assignment::with(['team.members', 'questions', 'distributions'])
+            ->where('created_by', auth()->id()) 
+            ->get();
 
         $assignments->transform(function ($assignment) {
             $scoreTotal = $assignment->distributions
@@ -49,7 +51,6 @@ class AssignmentController extends Controller
             'distributions.member:id,member_name',
         ]);
 
-        // Hitung total score & max weight
         $totalScore = $assignment->distributions()
             ->where('is_confirmed', true)
             ->join('questions', 'distributions.question_id', '=', 'questions.id')

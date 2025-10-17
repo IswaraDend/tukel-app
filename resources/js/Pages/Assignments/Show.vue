@@ -31,6 +31,7 @@ const toggleConfirm = async (distribution, event) => {
 
         if (response.data?.distribution) {
             distributions.value[index] = {
+                ...distributions.value[index],
                 ...response.data.distribution,
                 loading: false,
             };
@@ -153,7 +154,7 @@ const exportCSV = () => {
                                 {{ d.member_name || '-' }}
                             </p>
                             <p class="text-xs text-gray-400">
-                                ID: {{ d.id }}
+                                TEAM: {{ team.name }}
                             </p>
                         </div>
 

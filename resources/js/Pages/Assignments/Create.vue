@@ -235,11 +235,6 @@ const createTeam = async () => {
                             class="flex-1 border p-2 rounded"
                             placeholder="Name"
                         />
-                        <input
-                            v-model="m.email"
-                            class="flex-1 border p-2 rounded"
-                            placeholder="Email"
-                        />
                         <button
                             v-if="newTeam.members.length > 1"
                             @click="removeMember(i)"
