@@ -1,5 +1,5 @@
 const Ziggy = { 
-  "url": "http:\/\/127.0.0.1:8000", 
+  "url": import.meta.env.VITE_APP_URL || "http:\/\/127.0.0.1:8000", 
   "port": null, 
   "defaults": {}, 
   "routes": { 
